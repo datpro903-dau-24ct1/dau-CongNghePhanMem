@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
     Link,
     useSearchParams
@@ -40,11 +40,37 @@ function Messages() {
 
     const [loading, setLoading] = useState(true);
 
-    const [loadingMessages, setLoadingMessages] = useState(false);
+    const [loadingMessages, setLoadingMessages] =
+        useState(false);
+
+
+    // =========================
+    // REF CUỐI TIN NHẮN
+    // =========================
+
+    const messagesEndRef = useRef(null);
+
+
+    // =========================
+    // TỰ CUỘN XUỐNG CUỐI
+    // =========================
+
+    const scrollToBottom = () => {
+
+        setTimeout(() => {
+
+            messagesEndRef.current?.scrollIntoView({
+                behavior: "smooth"
+            });
+
+        }, 50);
+
+    };
 
 
     // =========================
     // LẤY DANH SÁCH BẠN BÈ
+    // PHP
     // =========================
 
     const fetchConversations = async () => {
@@ -58,7 +84,7 @@ function Messages() {
             setLoading(true);
 
             const response = await fetch(
-                `http://localhost:5000/api/friends/${user.id}`
+                `http://localhost/it-connect-php/messages/friends.php?user_id=${user.id}`
             );
 
             const data = await response.json();
@@ -98,31 +124,67 @@ function Messages() {
 
     // =========================
     // LẤY TIN NHẮN
+    // PHP
     // =========================
 
-    const fetchMessages = async (friendId) => {
+    const fetchMessages = async (
+        friendId,
+        showLoading = true
+    ) => {
 
         if (!user?.id || !friendId) {
             return;
         }
 
-        setLoadingMessages(true);
+        // Chỉ hiện loading khi người dùng
+        // mới mở cuộc trò chuyện
+        if (showLoading) {
+            setLoadingMessages(true);
+        }
 
         try {
 
             const response = await fetch(
-                `http://localhost:5000/api/messages/${user.id}/${friendId}`
+                `http://localhost/it-connect-php/messages/chat.php?user_id=${user.id}&friend_id=${friendId}`
             );
 
             const data = await response.json();
 
             if (response.ok) {
 
-                setMessages(data);
+                setMessages((oldMessages) => {
+
+                    // Nếu số lượng hoặc nội dung tin nhắn
+                    // thay đổi thì cập nhật giao diện
+                    const oldLast =
+                        oldMessages[
+                            oldMessages.length - 1
+                        ];
+
+                    const newLast =
+                        data[
+                            data.length - 1
+                        ];
+
+                    const hasNewMessage =
+                        oldMessages.length !== data.length ||
+                        oldLast?.id !== newLast?.id;
+
+                    if (hasNewMessage) {
+
+                        return data;
+
+                    }
+
+                    return oldMessages;
+
+                });
 
             } else {
 
-                setMessages([]);
+                if (showLoading) {
+                    setMessages([]);
+                }
 
                 console.log(
                     "Không lấy được tin nhắn:",
@@ -138,15 +200,57 @@ function Messages() {
                 error
             );
 
-            setMessages([]);
-
         } finally {
 
-            setLoadingMessages(false);
+            if (showLoading) {
+                setLoadingMessages(false);
+            }
 
         }
 
     };
+
+
+    // =========================
+    // TỰ ĐỘNG KIỂM TRA TIN NHẮN MỚI
+    // MỖI 1.5 GIÂY
+    // =========================
+
+    useEffect(() => {
+
+        if (!selectedUser) {
+            return;
+        }
+
+        const interval = setInterval(() => {
+
+            fetchMessages(
+                selectedUser.id,
+                false
+            );
+
+        }, 1500);
+
+        return () => {
+            clearInterval(interval);
+        };
+
+    }, [selectedUser]);
+
+
+    // =========================
+    // TỰ CUỘN KHI TIN NHẮN THAY ĐỔI
+    // =========================
+
+    useEffect(() => {
+
+        if (messages.length > 0) {
+
+            scrollToBottom();
+
+        }
+
+    }, [messages]);
 
 
     // =========================
@@ -157,7 +261,12 @@ function Messages() {
 
         setSelectedUser(friend);
 
-        fetchMessages(friend.id);
+        setMessages([]);
+
+        fetchMessages(
+            friend.id,
+            true
+        );
 
     };
 
@@ -176,19 +285,21 @@ function Messages() {
             return;
         }
 
-
-        const friend = conversations.find(
-            (conversation) =>
-                String(conversation.id) ===
-                String(userFromNotification)
-        );
-
+        const friend =
+            conversations.find(
+                (conversation) =>
+                    String(conversation.id) ===
+                    String(userFromNotification)
+            );
 
         if (friend) {
 
             setSelectedUser(friend);
 
-            fetchMessages(friend.id);
+            fetchMessages(
+                friend.id,
+                true
+            );
 
         }
 
@@ -200,6 +311,7 @@ function Messages() {
 
     // =========================
     // GỬI TIN NHẮN
+    // PHP
     // =========================
 
     const handleSendMessage = async () => {
@@ -215,7 +327,7 @@ function Messages() {
         try {
 
             const response = await fetch(
-                "http://localhost:5000/api/messages",
+                "http://localhost/it-connect-php/messages/send.php",
                 {
                     method: "POST",
 
@@ -227,18 +339,19 @@ function Messages() {
 
                         sender_id: user.id,
 
-                        receiver_id: selectedUser.id,
+                        receiver_id:
+                            selectedUser.id,
 
-                        content: content.trim()
+                        content:
+                            content.trim()
 
                     })
 
                 }
             );
 
-
-            const data = await response.json();
-
+            const data =
+                await response.json();
 
             if (!response.ok) {
 
@@ -260,19 +373,14 @@ function Messages() {
 
 
             // =========================
-            // LOAD LẠI TIN NHẮN
+            // LOAD NGAY TIN NHẮN
             // =========================
 
             await fetchMessages(
-                selectedUser.id
+                selectedUser.id,
+                false
             );
 
-
-            // =========================
-            // LOAD LẠI DANH SÁCH BẠN
-            // =========================
-
-            await fetchConversations();
 
         } catch (error) {
 
@@ -413,7 +521,6 @@ function Messages() {
 
                     <aside className="conversation-sidebar">
 
-
                         <div className="conversation-header">
 
                             <h2>
@@ -426,11 +533,6 @@ function Messages() {
 
                         </div>
 
-
-
-                        {/* =========================
-                            LOADING
-                        ========================= */}
 
                         {loading ? (
 
@@ -490,11 +592,6 @@ function Messages() {
                                             }
                                         >
 
-
-                                            {/* =========================
-                                                AVATAR
-                                            ========================= */}
-
                                             <div className="message-avatar">
 
                                                 {conversation.avatar ? (
@@ -519,11 +616,6 @@ function Messages() {
                                             </div>
 
 
-
-                                            {/* =========================
-                                                THÔNG TIN
-                                            ========================= */}
-
                                             <div className="conversation-info">
 
                                                 <strong>
@@ -540,7 +632,6 @@ function Messages() {
                                                 </span>
 
                                             </div>
-
 
                                         </div>
 
@@ -585,12 +676,9 @@ function Messages() {
                             <>
 
 
-                                {/* =========================
-                                    CHAT HEADER
-                                ========================= */}
+                                {/* CHAT HEADER */}
 
                                 <div className="chat-header">
-
 
                                     <div className="message-avatar">
 
@@ -616,7 +704,6 @@ function Messages() {
                                     </div>
 
 
-
                                     <div className="chat-user-info">
 
                                         <strong>
@@ -632,17 +719,13 @@ function Messages() {
 
                                     </div>
 
-
                                 </div>
 
 
 
-                                {/* =========================
-                                    DANH SÁCH TIN NHẮN
-                                ========================= */}
+                                {/* DANH SÁCH TIN NHẮN */}
 
                                 <div className="chat-messages">
-
 
                                     {loadingMessages ? (
 
@@ -683,7 +766,6 @@ function Messages() {
                                                         user.id
                                                     );
 
-
                                                 return (
 
                                                     <div
@@ -700,11 +782,6 @@ function Messages() {
                                                         }
                                                     >
 
-
-                                                        {/* =========================
-                                                            AVATAR NGƯỜI NHẬN
-                                                        ========================= */}
-
                                                         {!isMine && (
 
                                                             <div className="message-avatar mini">
@@ -720,9 +797,7 @@ function Messages() {
                                                         )}
 
 
-
                                                         <div className="message-content">
-
 
                                                             <div className="message-bubble">
 
@@ -731,7 +806,6 @@ function Messages() {
                                                                 }
 
                                                             </div>
-
 
                                                             <small>
 
@@ -749,9 +823,7 @@ function Messages() {
 
                                                             </small>
 
-
                                                         </div>
-
 
                                                     </div>
 
@@ -762,58 +834,48 @@ function Messages() {
 
                                     )}
 
+                                    {/* ĐIỂM CUỐI TIN NHẮN */}
+
+                                    <div
+                                        ref={messagesEndRef}
+                                    />
+
                                 </div>
 
 
 
-                                {/* =========================
-                                    INPUT
-                                ========================= */}
+                                {/* INPUT */}
 
                                 <div className="chat-input-area">
 
-
                                     <textarea
-
-                                        value={
-                                            content
-                                        }
-
+                                        value={content}
                                         onChange={(e) =>
                                             setContent(
                                                 e.target.value
                                             )
                                         }
-
                                         onKeyDown={
                                             handleKeyDown
                                         }
-
                                         placeholder="Nhập tin nhắn..."
-
                                         rows="1"
-
                                     />
 
 
                                     <button
-
                                         className="send-message-btn"
-
                                         onClick={
                                             handleSendMessage
                                         }
-
                                         disabled={
                                             !content.trim()
                                         }
-
                                     >
 
                                         ➤
 
                                     </button>
-
 
                                 </div>
 
@@ -824,7 +886,6 @@ function Messages() {
 
                     </section>
 
-
                 </div>
 
             </main>
@@ -834,6 +895,5 @@ function Messages() {
     );
 
 }
-
 
 export default Messages;

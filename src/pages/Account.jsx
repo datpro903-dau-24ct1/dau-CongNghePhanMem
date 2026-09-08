@@ -39,7 +39,7 @@ function Account() {
         try {
 
             const response = await fetch(
-                `http://localhost:5000/api/posts?user_id=${userId}`
+                `http://localhost/it-connect-php/posts/posts.php?user_id=${userId}`
             );
 
             const data = await response.json();
@@ -51,7 +51,8 @@ function Account() {
 
             // Chỉ lấy bài của mình
             const posts = data.filter(
-                (post) => Number(post.user_id) === Number(userId)
+                (post) =>
+                    Number(post.user_id) === Number(userId)
             );
 
             setMyPosts(posts);
@@ -95,6 +96,7 @@ function Account() {
 
 
     return (
+
         <div className="account-page">
 
             {/* =========================
@@ -135,7 +137,6 @@ function Account() {
 
                     <div className="profile-cover"></div>
 
-
                     <div className="profile-content">
 
                         <div className="profile-avatar">
@@ -161,6 +162,7 @@ function Account() {
 
 
                         <div className="profile-info">
+
 
                             <div className="info-item">
 
@@ -224,6 +226,7 @@ function Account() {
 
                             </div>
 
+
                         </div>
 
 
@@ -247,7 +250,6 @@ function Account() {
                 </section>
 
 
-
                 {/* =========================
                     MY POSTS
                 ========================= */}
@@ -257,6 +259,7 @@ function Account() {
                     <div className="section-title">
 
                         <div>
+
                             <h2>
                                 📝 Bài viết của tôi
                             </h2>
@@ -264,6 +267,7 @@ function Account() {
                             <p>
                                 Những bài viết bạn đã chia sẻ
                             </p>
+
                         </div>
 
                         <span className="post-count">
@@ -333,6 +337,7 @@ function Account() {
                                             </strong>
 
                                             <span>
+
                                                 {post.created_at
                                                     ? new Date(
                                                         post.created_at
@@ -341,6 +346,7 @@ function Account() {
                                                     )
                                                     : "Vừa đăng"
                                                 }
+
                                             </span>
 
                                         </div>
@@ -358,15 +364,19 @@ function Account() {
                                     <div className="account-post-stats">
 
                                         <span>
-                                            ❤️ {Number(
+                                            ❤️{" "}
+                                            {Number(
                                                 post.like_count
-                                            ) || 0} lượt thích
+                                            ) || 0}
+                                            {" lượt thích"}
                                         </span>
 
                                         <span>
-                                            💬 {Number(
+                                            💬{" "}
+                                            {Number(
                                                 post.comment_count
-                                            ) || 0} bình luận
+                                            ) || 0}
+                                            {" bình luận"}
                                         </span>
 
                                     </div>
@@ -384,7 +394,9 @@ function Account() {
             </main>
 
         </div>
+
     );
+
 }
 
 export default Account;

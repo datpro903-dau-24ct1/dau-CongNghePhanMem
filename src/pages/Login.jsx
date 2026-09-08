@@ -19,7 +19,7 @@ function Login() {
 
         try {
             const response = await fetch(
-                "http://localhost:5000/api/login",
+                "http://localhost/it-connect-php/auth/login.php",
                 {
                     method: "POST",
                     headers: {
@@ -55,7 +55,7 @@ function Login() {
             console.error(error);
 
             setError(
-                "Không thể kết nối đến server!"
+                "Không thể kết nối đến PHP server!"
             );
 
             setLoading(false);

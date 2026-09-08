@@ -54,6 +54,7 @@ function Friends() {
 
     // =========================
     // LẤY DANH SÁCH NGƯỜI DÙNG
+    // PHP
     // =========================
 
     const fetchUsers = async () => {
@@ -65,7 +66,7 @@ function Friends() {
         try {
 
             const response = await fetch(
-                `http://localhost:5000/api/friends/users?user_id=${user.id}`
+                `http://localhost/it-connect-php/friends/users.php?user_id=${user.id}`
             );
 
             const data = await response.json();
@@ -87,6 +88,8 @@ function Friends() {
                 error
             );
 
+            setUsers([]);
+
         }
 
     };
@@ -94,6 +97,7 @@ function Friends() {
 
     // =========================
     // LẤY LỜI MỜI
+    // PHP
     // =========================
 
     const fetchRequests = async () => {
@@ -105,7 +109,7 @@ function Friends() {
         try {
 
             const response = await fetch(
-                `http://localhost:5000/api/friends/requests/${user.id}`
+                `http://localhost/it-connect-php/friends/requests.php?user_id=${user.id}`
             );
 
             const data = await response.json();
@@ -136,6 +140,7 @@ function Friends() {
 
     // =========================
     // LẤY BẠN BÈ
+    // PHP
     // =========================
 
     const fetchFriends = async () => {
@@ -147,7 +152,7 @@ function Friends() {
         try {
 
             const response = await fetch(
-                `http://localhost:5000/api/friends/${user.id}`
+                `http://localhost/it-connect-php/friends/list.php?user_id=${user.id}`
             );
 
             const data = await response.json();
@@ -268,6 +273,7 @@ function Friends() {
 
     // =========================
     // GỬI LỜI MỜI
+    // PHP
     // =========================
 
     const handleAddFriend = async (
@@ -277,7 +283,7 @@ function Friends() {
         try {
 
             const response = await fetch(
-                "http://localhost:5000/api/friends/request",
+                "http://localhost/it-connect-php/friends/action.php?action=request",
                 {
                     method: "POST",
 
@@ -320,7 +326,10 @@ function Friends() {
 
         } catch (error) {
 
-            console.log(error);
+            console.log(
+                "Lỗi gửi lời mời:",
+                error
+            );
 
         }
 
@@ -329,6 +338,7 @@ function Friends() {
 
     // =========================
     // CHẤP NHẬN
+    // PHP
     // =========================
 
     const handleAccept = async (
@@ -338,7 +348,7 @@ function Friends() {
         try {
 
             const response = await fetch(
-                `http://localhost:5000/api/friends/accept/${friendshipId}`,
+                `http://localhost/it-connect-php/friends/action.php?action=accept&id=${friendshipId}`,
                 {
                     method: "PUT"
                 }
@@ -369,7 +379,10 @@ function Friends() {
 
         } catch (error) {
 
-            console.log(error);
+            console.log(
+                "Lỗi chấp nhận lời mời:",
+                error
+            );
 
         }
 
@@ -378,6 +391,7 @@ function Friends() {
 
     // =========================
     // TỪ CHỐI
+    // PHP
     // =========================
 
     const handleReject = async (
@@ -387,7 +401,7 @@ function Friends() {
         try {
 
             const response = await fetch(
-                `http://localhost:5000/api/friends/reject/${friendshipId}`,
+                `http://localhost/it-connect-php/friends/action.php?action=reject&id=${friendshipId}`,
                 {
                     method: "PUT"
                 }
@@ -416,7 +430,10 @@ function Friends() {
 
         } catch (error) {
 
-            console.log(error);
+            console.log(
+                "Lỗi từ chối lời mời:",
+                error
+            );
 
         }
 

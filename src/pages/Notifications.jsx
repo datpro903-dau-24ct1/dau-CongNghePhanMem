@@ -6,77 +6,126 @@ function Notifications() {
 
     const navigate = useNavigate();
 
-
     // =========================
     // USER
     // =========================
 
     const user = JSON.parse(
-        localStorage.getItem("user")
+        localStorage.getItem("user") || "null"
     );
-
 
     // =========================
     // STATE
     // =========================
 
     const [notifications, setNotifications] = useState([]);
-
     const [loading, setLoading] = useState(true);
 
+    const [deletingNotificationId, setDeletingNotificationId] =
+        useState(null);
+
+    // Thông báo đang được chọn để xóa
+    const [notificationToDelete, setNotificationToDelete] =
+        useState(null);
 
     // =========================
     // LẤY THÔNG BÁO
+    // PHP
     // =========================
 
-    const fetchNotifications = async () => {
+    const fetchNotifications = async (showLoading = true) => {
 
         if (!user?.id) {
+
+            console.log("❌ Không tìm thấy user.id:", user);
 
             setLoading(false);
 
             return;
-
         }
 
         try {
 
-            const response = await fetch(
-                `http://localhost:5000/api/notifications/${user.id}`
+            if (showLoading) {
+                setLoading(true);
+            }
+
+            const url =
+                `http://localhost/it-connect-php/notifications/notifications.php?user_id=${user.id}`;
+
+            console.log("🔔 Gọi API thông báo:", url);
+
+            const response = await fetch(url);
+
+            console.log(
+                "🔔 HTTP status:",
+                response.status
             );
 
             const data = await response.json();
 
+            console.log(
+                "🔔 Dữ liệu API trả về:",
+                data
+            );
+
+            console.log(
+                "🔔 Có phải Array:",
+                Array.isArray(data)
+            );
 
             if (!response.ok) {
 
-                console.log(data.message);
+                console.log(
+                    "❌ API lỗi:",
+                    data.message || "Không thể lấy thông báo"
+                );
+
+                setNotifications([]);
 
                 return;
-
             }
 
+            if (Array.isArray(data)) {
 
-            setNotifications(data);
+                console.log(
+                    `✅ Đã nhận ${data.length} thông báo`
+                );
+
+                setNotifications(data);
+
+            } else {
+
+                console.log(
+                    "❌ API không trả về mảng:",
+                    data
+                );
+
+                setNotifications([]);
+
+            }
 
         } catch (error) {
 
             console.log(
-                "Lỗi lấy thông báo:",
+                "❌ Lỗi lấy thông báo:",
                 error
             );
 
+            setNotifications([]);
+
         } finally {
 
-            setLoading(false);
+            if (showLoading) {
+                setLoading(false);
+            }
 
         }
 
     };
 
-
     // =========================
-    // LOAD
+    // LOAD LẦN ĐẦU
     // =========================
 
     useEffect(() => {
@@ -85,6 +134,29 @@ function Notifications() {
 
     }, []);
 
+    // =========================
+    // TỰ ĐỘNG KIỂM TRA
+    // =========================
+
+    useEffect(() => {
+
+        if (!user?.id) {
+            return;
+        }
+
+        const interval = setInterval(() => {
+
+            fetchNotifications(false);
+
+        }, 2000);
+
+        return () => {
+
+            clearInterval(interval);
+
+        };
+
+    }, []);
 
     // =========================
     // FORMAT THỜI GIAN
@@ -93,147 +165,91 @@ function Notifications() {
     const formatTime = (dateString) => {
 
         if (!dateString) {
-
             return "";
-
         }
 
+        const date = new Date(dateString);
+        const now = new Date();
 
-        const date =
-            new Date(dateString);
-
-        const now =
-            new Date();
-
-
-        const diff =
-            Math.floor(
-                (now - date) / 1000
-            );
-
-
-        if (diff < 60) {
-
-            return "Vừa xong";
-
-        }
-
-
-        if (diff < 3600) {
-
-            return `${Math.floor(diff / 60)} phút trước`;
-
-        }
-
-
-        if (diff < 86400) {
-
-            return `${Math.floor(diff / 3600)} giờ trước`;
-
-        }
-
-
-        if (diff < 172800) {
-
-            return "Hôm qua";
-
-        }
-
-
-        if (diff < 604800) {
-
-            return `${Math.floor(diff / 86400)} ngày trước`;
-
-        }
-
-
-        return date.toLocaleDateString(
-            "vi-VN"
+        const diff = Math.floor(
+            (now - date) / 1000
         );
 
-    };
+        if (diff < 60) {
+            return "Vừa xong";
+        }
 
+        if (diff < 3600) {
+            return `${Math.floor(diff / 60)} phút trước`;
+        }
+
+        if (diff < 86400) {
+            return `${Math.floor(diff / 3600)} giờ trước`;
+        }
+
+        if (diff < 172800) {
+            return "Hôm qua";
+        }
+
+        if (diff < 604800) {
+            return `${Math.floor(diff / 86400)} ngày trước`;
+        }
+
+        return date.toLocaleDateString("vi-VN");
+    };
 
     // =========================
     // ICON
     // =========================
 
-    const getNotificationIcon = (
-        type
-    ) => {
+    const getNotificationIcon = (type) => {
 
         switch (type) {
 
             case "friend_request":
-
                 return "👥";
 
-
             case "friend_accept":
-
                 return "🤝";
 
-
             case "message":
-
                 return "💬";
 
-
             default:
-
                 return "🔔";
-
         }
 
     };
-
 
     // =========================
     // CLICK THÔNG BÁO
     // =========================
 
-    const handleNotificationClick = (
-        notification
-    ) => {
+    const handleNotificationClick = (notification) => {
 
         if (!notification) {
-
             return;
-
         }
 
-
-        // =================================
+        // =========================
         // ĐÁNH DẤU ĐÃ ĐỌC
-        // KHÔNG CHỜ API
-        // =================================
+        // =========================
 
-        if (
-            Number(notification.is_read) === 0
-        ) {
+        if (Number(notification.is_read) === 0) {
 
-            // Cập nhật giao diện ngay
-
-            setNotifications(
-                (current) =>
-                    current.map(
-                        (item) =>
-                            item.id ===
-                            notification.id
-                                ? {
-                                    ...item,
-                                    is_read: 1
-                                }
-                                : item
-                    )
+            setNotifications((current) =>
+                current.map((item) =>
+                    String(item.id) === String(notification.id)
+                        ? {
+                            ...item,
+                            is_read: 1
+                        }
+                        : item
+                )
             );
 
-
-            // Gọi API chạy nền
-            // Không await
-
             fetch(
-                `http://localhost:5000/api/notifications/${notification.id}/read`,
+                `http://localhost/it-connect-php/notifications/read.php?id=${notification.id}`,
                 {
                     method: "PUT"
                 }
@@ -248,61 +264,36 @@ function Notifications() {
 
         }
 
-
-        // =================================
+        // =========================
         // LỜI MỜI KẾT BẠN
-        // =================================
+        // =========================
 
-        if (
-            notification.type ===
-            "friend_request"
-        ) {
+        if (notification.type === "friend_request") {
 
-            navigate(
-                "/friends?tab=requests"
-            );
+            navigate("/friends?tab=requests");
 
             return;
-
         }
 
-
-        // =================================
+        // =========================
         // CHẤP NHẬN KẾT BẠN
-        // =================================
+        // =========================
 
-        if (
-            notification.type ===
-            "friend_accept"
-        ) {
+        if (notification.type === "friend_accept") {
 
-            navigate(
-                "/friends"
-            );
+            navigate("/friends");
 
             return;
-
         }
 
-
-        // =================================
+        // =========================
         // TIN NHẮN
-        // =================================
+        // =========================
 
-        if (
-            notification.type ===
-            "message"
-        ) {
+        if (notification.type === "message") {
 
             const senderId =
                 notification.from_user_id;
-
-
-            console.log(
-                "Notification message:",
-                notification
-            );
-
 
             if (senderId) {
 
@@ -312,76 +303,158 @@ function Notifications() {
 
             } else {
 
-                navigate(
-                    "/messages"
-                );
+                navigate("/messages");
 
             }
 
-
             return;
-
         }
 
+        navigate("/home");
+    };
 
-        // =================================
-        // MẶC ĐỊNH
-        // =================================
+    // =========================
+    // MỞ MODAL XÓA
+    // =========================
 
-        navigate(
-            "/home"
-        );
+    const openDeleteModal = (
+        event,
+        notification
+    ) => {
+
+        event.stopPropagation();
+
+        setNotificationToDelete(notification);
 
     };
 
+    // =========================
+    // ĐÓNG MODAL
+    // =========================
+
+    const closeDeleteModal = () => {
+
+        if (deletingNotificationId) {
+            return;
+        }
+
+        setNotificationToDelete(null);
+
+    };
 
     // =========================
-    // ĐÁNH DẤU TẤT CẢ ĐÃ ĐỌC
+    // XÓA THÔNG BÁO
+    // =========================
+
+    const handleDeleteNotification = async () => {
+
+        if (
+            !user?.id ||
+            !notificationToDelete?.id
+        ) {
+            return;
+        }
+
+        const notificationId =
+            notificationToDelete.id;
+
+        setDeletingNotificationId(
+            notificationId
+        );
+
+        try {
+
+            const response = await fetch(
+                `http://localhost/it-connect-php/notifications/delete.php?id=${notificationId}&user_id=${user.id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+            const data =
+                await response
+                    .json()
+                    .catch(() => ({}));
+
+            if (!response.ok) {
+
+                console.log(
+                    "❌ Lỗi xóa thông báo:",
+                    data.message ||
+                    response.status
+                );
+
+                return;
+            }
+
+            // =========================
+            // XÓA KHỎI GIAO DIỆN
+            // =========================
+
+            setNotifications((current) =>
+                current.filter(
+                    (notification) =>
+                        String(notification.id) !==
+                        String(notificationId)
+                )
+            );
+
+            console.log(
+                "✅ Xóa thông báo thành công"
+            );
+
+            // Đóng modal
+            setNotificationToDelete(null);
+
+        } catch (error) {
+
+            console.log(
+                "❌ Lỗi xóa thông báo:",
+                error
+            );
+
+        } finally {
+
+            setDeletingNotificationId(null);
+
+        }
+
+    };
+
+    // =========================
+    // ĐÁNH DẤU TẤT CẢ
     // =========================
 
     const markAllAsRead = async () => {
 
         if (!user?.id) {
-
             return;
-
         }
 
-
-        // Cập nhật giao diện trước
-
-        setNotifications(
-            (current) =>
-                current.map(
-                    (notification) => ({
-                        ...notification,
-                        is_read: 1
-                    })
-                )
+        setNotifications((current) =>
+            current.map((notification) => ({
+                ...notification,
+                is_read: 1
+            }))
         );
-
 
         try {
 
             const response = await fetch(
-                `http://localhost:5000/api/notifications/${user.id}/read-all`,
+                `http://localhost/it-connect-php/notifications/read-all.php?user_id=${user.id}`,
                 {
                     method: "PUT"
                 }
             );
 
-
-            const data =
-                await response.json();
-
+            const data = await response.json();
 
             if (!response.ok) {
 
                 console.log(
-                    data.message
+                    data.message ||
+                    "Không thể đánh dấu tất cả"
                 );
-
-                return;
 
             }
 
@@ -396,7 +469,6 @@ function Notifications() {
 
     };
 
-
     // =========================
     // ĐẾM CHƯA ĐỌC
     // =========================
@@ -404,11 +476,8 @@ function Notifications() {
     const unreadCount =
         notifications.filter(
             (notification) =>
-                Number(
-                    notification.is_read
-                ) === 0
+                Number(notification.is_read) === 0
         ).length;
-
 
     // =========================
     // LOGOUT
@@ -416,25 +485,19 @@ function Notifications() {
 
     const handleLogout = () => {
 
-        localStorage.removeItem(
-            "user"
-        );
+        localStorage.removeItem("user");
 
         window.location.href = "/";
 
     };
-
 
     // =========================
     // CHƯA ĐĂNG NHẬP
     // =========================
 
     if (!user) {
-
         return null;
-
     }
-
 
     // =========================
     // RENDER
@@ -444,8 +507,9 @@ function Notifications() {
 
         <div className="notifications-app">
 
-
-            {/* HEADER */}
+            {/* =========================
+                HEADER
+            ========================= */}
 
             <header className="notifications-header">
 
@@ -453,11 +517,8 @@ function Notifications() {
                     to="/home"
                     className="notifications-logo"
                 >
-
                     🎓 IT CONNECT
-
                 </Link>
-
 
                 <div className="notifications-search">
 
@@ -469,7 +530,6 @@ function Notifications() {
                     />
 
                 </div>
-
 
                 <div className="notifications-header-right">
 
@@ -483,41 +543,31 @@ function Notifications() {
                         {unreadCount > 0 && (
 
                             <span className="notifications-badge">
-
-                                {
-                                    unreadCount > 9
-                                        ? "9+"
-                                        : unreadCount
-                                }
-
+                                {unreadCount > 9
+                                    ? "9+"
+                                    : unreadCount}
                             </span>
 
                         )}
 
                     </Link>
 
-
                     <div
                         className="notifications-user"
                         onClick={() =>
-                            navigate(
-                                "/account"
-                            )
+                            navigate("/account")
                         }
                     >
 
                         <div className="notifications-avatar">
 
-                            {
-                                user?.name
-                                    ? user.name
-                                        .charAt(0)
-                                        .toUpperCase()
-                                    : "Đ"
-                            }
+                            {user?.name
+                                ? user.name
+                                    .charAt(0)
+                                    .toUpperCase()
+                                : "Đ"}
 
                         </div>
-
 
                         <span>
                             {user?.name || "Đạt"}
@@ -529,14 +579,15 @@ function Notifications() {
 
             </header>
 
-
-
-            {/* MAIN */}
+            {/* =========================
+                MAIN
+            ========================= */}
 
             <div className="notifications-layout">
 
-
-                {/* SIDEBAR */}
+                {/* =========================
+                    SIDEBAR
+                ========================= */}
 
                 <aside className="notifications-sidebar">
 
@@ -546,98 +597,63 @@ function Notifications() {
                             to="/home"
                             className="notification-menu"
                         >
-
                             <span>🏠</span>
-
                             Trang chủ
-
                         </Link>
-
 
                         <Link
                             to="/home"
                             className="notification-menu"
                         >
-
                             <span>📝</span>
-
                             Bài viết
-
                         </Link>
-
 
                         <Link
                             to="/friends"
                             className="notification-menu"
                         >
-
                             <span>👥</span>
-
                             Bạn bè
-
                         </Link>
-
 
                         <Link
                             to="/messages"
                             className="notification-menu"
                         >
-
                             <span>💬</span>
-
                             Tin nhắn
-
                         </Link>
-
 
                         <Link
                             to="/account"
                             className="notification-menu"
                         >
-
                             <span>👤</span>
-
                             Tài khoản
-
                         </Link>
 
                     </nav>
 
-
                     <div className="notifications-sidebar-bottom">
-
-                        <div className="notification-menu">
-
-                            <span>⚙️</span>
-
-                            Cài đặt
-
-                        </div>
-
 
                         <button
                             className="notification-menu logout"
-                            onClick={
-                                handleLogout
-                            }
+                            onClick={handleLogout}
                         >
-
                             <span>🚪</span>
-
                             Đăng xuất
-
                         </button>
 
                     </div>
 
                 </aside>
 
-
-
-                {/* CONTENT */}
+                {/* =========================
+                    CONTENT
+                ========================= */}
 
                 <main className="notifications-content">
-
 
                     <div className="notifications-title-row">
 
@@ -649,45 +665,37 @@ function Notifications() {
 
                             <p>
 
-                                {
-                                    unreadCount > 0
-                                        ? `${unreadCount} thông báo chưa đọc`
-                                        : "Bạn đã xem tất cả thông báo"
-                                }
+                                {unreadCount > 0
+                                    ? `${unreadCount} thông báo chưa đọc`
+                                    : "Bạn đã xem tất cả thông báo"}
 
                             </p>
 
                         </div>
 
-
                         {unreadCount > 0 && (
 
                             <button
                                 className="mark-all-btn"
-                                onClick={
-                                    markAllAsRead
-                                }
+                                onClick={markAllAsRead}
                             >
-
                                 ✓ Đánh dấu tất cả đã đọc
-
                             </button>
 
                         )}
 
                     </div>
 
-
+                    {/* =========================
+                        CARD
+                    ========================= */}
 
                     <div className="notifications-card">
-
 
                         {loading ? (
 
                             <div className="notifications-loading">
-
                                 Đang tải thông báo...
-
                             </div>
 
                         ) : notifications.length === 0 ? (
@@ -716,13 +724,10 @@ function Notifications() {
                                 {unreadCount > 0 && (
 
                                     <div className="notification-section-title">
-
                                         Mới
-
                                     </div>
 
                                 )}
-
 
                                 {notifications.map(
                                     (notification) => {
@@ -731,7 +736,6 @@ function Notifications() {
                                             Number(
                                                 notification.is_read
                                             ) === 0;
-
 
                                         return (
 
@@ -751,56 +755,48 @@ function Notifications() {
                                                 }
                                             >
 
-
-                                                {/* AVATAR */}
+                                                {/* =========================
+                                                    AVATAR
+                                                ========================= */}
 
                                                 <div className="notification-avatar-wrapper">
 
                                                     <div className="notification-avatar-large">
 
-                                                        {
-                                                            notification.name
-                                                                ? notification.name
-                                                                    .charAt(0)
-                                                                    .toUpperCase()
-                                                                : "?"
-                                                        }
+                                                        {notification.name
+                                                            ? notification.name
+                                                                .charAt(0)
+                                                                .toUpperCase()
+                                                            : "?"}
 
                                                     </div>
 
-
                                                     <span className="notification-type-icon">
 
-                                                        {
-                                                            getNotificationIcon(
-                                                                notification.type
-                                                            )
-                                                        }
+                                                        {getNotificationIcon(
+                                                            notification.type
+                                                        )}
 
                                                     </span>
 
                                                 </div>
 
-
-
-                                                {/* CONTENT */}
+                                                {/* =========================
+                                                    CONTENT
+                                                ========================= */}
 
                                                 <div className="notification-item-content">
 
                                                     <p>
 
                                                         <strong>
-
                                                             {
                                                                 notification.name ||
                                                                 "Người dùng"
                                                             }
-
                                                         </strong>
 
-
                                                         {" "}
-
 
                                                         {
                                                             notification.content
@@ -808,22 +804,41 @@ function Notifications() {
 
                                                     </p>
 
-
                                                     <span className="notification-time">
 
-                                                        {
-                                                            formatTime(
-                                                                notification.created_at
-                                                            )
-                                                        }
+                                                        {formatTime(
+                                                            notification.created_at
+                                                        )}
 
                                                     </span>
 
                                                 </div>
 
+                                                {/* =========================
+                                                    NÚT XÓA
+                                                ========================= */}
 
+                                                <button
+                                                    type="button"
+                                                    className="notification-delete"
+                                                    onClick={(event) =>
+                                                        openDeleteModal(
+                                                            event,
+                                                            notification
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        deletingNotificationId ===
+                                                        notification.id
+                                                    }
+                                                    title="Xóa thông báo"
+                                                >
+                                                    ✕
+                                                </button>
 
-                                                {/* UNREAD */}
+                                                {/* =========================
+                                                    DẤU CHẤM CHƯA ĐỌC
+                                                ========================= */}
 
                                                 {unread && (
 
@@ -848,11 +863,85 @@ function Notifications() {
 
             </div>
 
+            {/* =========================
+                MODAL XÁC NHẬN XÓA
+            ========================= */}
+
+            {notificationToDelete && (
+
+                <div
+                    className="delete-modal-overlay"
+                    onClick={closeDeleteModal}
+                >
+
+                    <div
+                        className="delete-modal"
+                        onClick={(event) =>
+                            event.stopPropagation()
+                        }
+                    >
+
+                        {/* ICON */}
+
+                        <div className="delete-modal-icon">
+                            🗑️
+                        </div>
+
+                        {/* TITLE */}
+
+                        <h2>
+                            Xóa thông báo?
+                        </h2>
+
+                        {/* MESSAGE */}
+
+                        <p>
+                            Bạn có chắc muốn xóa thông báo này không?
+                        </p>
+
+                        {/* BUTTONS */}
+
+                        <div className="delete-modal-buttons">
+
+                            <button
+                                type="button"
+                                className="delete-cancel-btn"
+                                onClick={closeDeleteModal}
+                                disabled={
+                                    !!deletingNotificationId
+                                }
+                            >
+                                Hủy
+                            </button>
+
+                            <button
+                                type="button"
+                                className="delete-confirm-btn"
+                                onClick={
+                                    handleDeleteNotification
+                                }
+                                disabled={
+                                    !!deletingNotificationId
+                                }
+                            >
+
+                                {deletingNotificationId
+                                    ? "Đang xóa..."
+                                    : "Xóa"}
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            )}
+
         </div>
 
     );
-
 }
-
 
 export default Notifications;

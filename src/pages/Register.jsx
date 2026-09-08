@@ -14,6 +14,7 @@ function Register() {
 
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -27,9 +28,11 @@ function Register() {
             return;
         }
 
+        setLoading(true);
+
         try {
             const response = await fetch(
-                "http://localhost:5000/api/register",
+                "http://localhost/it-connect-php/auth/register.php",
                 {
                     method: "POST",
                     headers: {
@@ -49,10 +52,12 @@ function Register() {
 
             if (!response.ok) {
                 setError(data.message);
+                setLoading(false);
                 return;
             }
 
             setMessage(data.message);
+            setLoading(false);
 
             // Chuyển sang đăng nhập
             setTimeout(() => {
@@ -63,8 +68,10 @@ function Register() {
             console.error(error);
 
             setError(
-                "Không thể kết nối đến server!"
+                "Không thể kết nối đến PHP server!"
             );
+
+            setLoading(false);
         }
     };
 
@@ -198,8 +205,13 @@ function Register() {
                             </p>
                         )}
 
-                        <button type="submit">
-                            Đăng ký
+                        <button
+                            type="submit"
+                            disabled={loading}
+                        >
+                            {loading
+                                ? "Đang đăng ký..."
+                                : "Đăng ký"}
                         </button>
 
                     </form>
