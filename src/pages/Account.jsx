@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import "./Account.css";
 
 function Account() {
-
     const [user, setUser] = useState(null);
     const [myPosts, setMyPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,7 +12,6 @@ function Account() {
     // =========================
 
     useEffect(() => {
-
         const savedUser = localStorage.getItem("user");
 
         if (!savedUser) {
@@ -26,18 +24,14 @@ function Account() {
         setUser(currentUser);
 
         fetchMyPosts(currentUser.id);
-
     }, []);
-
 
     // =========================
     // LẤY BÀI VIẾT CỦA USER
     // =========================
 
     const fetchMyPosts = async (userId) => {
-
         try {
-
             const response = await fetch(
                 `http://localhost/it-connect-php/posts/posts.php?user_id=${userId}`
             );
@@ -58,33 +52,24 @@ function Account() {
             setMyPosts(posts);
 
         } catch (error) {
-
             console.log(
                 "Lỗi lấy bài viết:",
                 error
             );
 
         } finally {
-
             setLoading(false);
-
         }
-
     };
-
 
     // =========================
     // ĐĂNG XUẤT
     // =========================
 
     const handleLogout = () => {
-
         localStorage.removeItem("user");
-
         window.location.href = "/";
-
     };
-
 
     // =========================
     // CHƯA CÓ USER
@@ -94,9 +79,7 @@ function Account() {
         return null;
     }
 
-
     return (
-
         <div className="account-page">
 
             {/* =========================
@@ -106,14 +89,14 @@ function Account() {
             <header className="account-header">
 
                 <Link
-                    to="/"
+                    to="/home"
                     className="account-logo"
                 >
                     🎓 IT CONNECT
                 </Link>
 
                 <Link
-                    to="/"
+                    to="/home"
                     className="back-home"
                 >
                     ← Trang chủ
@@ -164,6 +147,8 @@ function Account() {
                         <div className="profile-info">
 
 
+                            {/* EMAIL */}
+
                             <div className="info-item">
 
                                 <span className="info-icon">
@@ -184,6 +169,8 @@ function Account() {
 
                             </div>
 
+
+                            {/* MÃ SINH VIÊN */}
 
                             <div className="info-item">
 
@@ -206,6 +193,8 @@ function Account() {
                             </div>
 
 
+                            {/* LỚP */}
+
                             <div className="info-item">
 
                                 <span className="info-icon">
@@ -220,6 +209,34 @@ function Account() {
 
                                     <strong>
                                         {user.class}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            {/* NGÀY SINH */}
+
+                            <div className="info-item">
+
+                                <span className="info-icon">
+                                    🎂
+                                </span>
+
+                                <div>
+
+                                    <small>
+                                        Ngày sinh
+                                    </small>
+
+                                    <strong>
+                                        {user.date_of_birth
+                                            ? new Date(
+                                                user.date_of_birth
+                                            ).toLocaleDateString("vi-VN")
+                                            : "Chưa cập nhật"
+                                        }
                                     </strong>
 
                                 </div>
@@ -394,9 +411,7 @@ function Account() {
             </main>
 
         </div>
-
     );
-
 }
 
 export default Account;

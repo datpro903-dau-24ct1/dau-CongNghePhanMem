@@ -22,18 +22,36 @@ $email = trim($data["email"] ?? "");
 $password = $data["password"] ?? "";
 $student_code = trim($data["student_code"] ?? "");
 $class = trim($data["class"] ?? "");
+$date_of_birth = trim($data["date_of_birth"] ?? "");
 
 if (
     empty($name) ||
     empty($email) ||
     empty($password) ||
     empty($student_code) ||
-    empty($class)
+    empty($class) ||
+    empty($date_of_birth)
 ) {
     http_response_code(400);
 
     echo json_encode([
         "message" => "Vui lòng nhập đầy đủ thông tin!"
+    ]);
+
+    exit;
+}
+
+// Kiểm tra email
+if (
+    !preg_match(
+        '/^[^\s@]+@(gmail\.com|[a-zA-Z0-9-]+\.edu\.vn)$/i',
+        $email
+    )
+) {
+    http_response_code(400);
+
+    echo json_encode([
+        "message" => "Email phải có đuôi @gmail.com hoặc tên miền .edu.vn!"
     ]);
 
     exit;
@@ -104,20 +122,22 @@ $sql = "
         email,
         password,
         student_code,
-        class
+        class,
+        date_of_birth
     )
-    VALUES (?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?)
 ";
 
 $stmt = $conn->prepare($sql);
 
 $stmt->bind_param(
-    "sssss",
+    "ssssss",
     $name,
     $email,
     $hashedPassword,
     $student_code,
-    $class
+    $class,
+    $date_of_birth
 );
 
 if ($stmt->execute()) {

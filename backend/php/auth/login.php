@@ -47,6 +47,7 @@ $sql = "
         password,
         student_code,
         class,
+        date_of_birth,
         avatar,
         role,
         created_at

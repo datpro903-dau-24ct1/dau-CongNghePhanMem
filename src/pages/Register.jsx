@@ -9,6 +9,7 @@ function Register() {
     const [email, setEmail] = useState("");
     const [studentCode, setStudentCode] = useState("");
     const [className, setClassName] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
@@ -28,6 +29,17 @@ function Register() {
             return;
         }
 
+        // Kiểm tra email
+        const emailRegex =
+            /^[^\s@]+@(gmail\.com|[a-zA-Z0-9-]+\.edu\.vn)$/i;
+
+        if (!emailRegex.test(email)) {
+            setError(
+                "Email phải có đuôi @gmail.com hoặc tên miền .edu.vn!"
+            );
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -43,7 +55,8 @@ function Register() {
                         email: email,
                         password: password,
                         student_code: studentCode,
-                        class: className
+                        class: className,
+                        date_of_birth: dateOfBirth
                     })
                 }
             );
@@ -119,6 +132,20 @@ function Register() {
                                 onChange={(e) =>
                                     setName(e.target.value)
                                 }
+                            />
+                        </div>
+
+                        {/* NGÀY SINH */}
+                        <div className="register-form-group">
+                            <label>Ngày tháng năm sinh</label>
+
+                            <input
+                                type="date"
+                                value={dateOfBirth}
+                                onChange={(e) =>
+                                    setDateOfBirth(e.target.value)
+                                }
+                                required
                             />
                         </div>
 
