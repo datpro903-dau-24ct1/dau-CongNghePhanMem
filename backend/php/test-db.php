@@ -4,7 +4,7 @@ header("Content-Type: text/plain; charset=UTF-8");
 
 $host = "localhost";
 $user = "root";
-$password = "";
+$password = "123456";
 $database = "it_connect";
 
 $conn = new mysqli(
