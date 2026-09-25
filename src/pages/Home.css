@@ -6,8 +6,15 @@
   box-sizing: border-box;
 }
 
-body {
+html,
+body,
+#root {
   margin: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
   font-family: Arial, Helvetica, sans-serif;
   background: #f3f5f9;
   color: #1f2937;
@@ -15,21 +22,24 @@ body {
 
 
 /* =========================
- APP
+   APP
 ========================= */
 
 .app {
+  width: 100%;
   min-height: 100vh;
   background: #f3f5f9;
 }
 
 
 /* =========================
- HEADER
+   HEADER
 ========================= */
 
 .header {
+  width: 100%;
   height: 72px;
+
   background: white;
 
   display: flex;
@@ -41,12 +51,13 @@ body {
 
   position: sticky;
   top: 0;
+
   z-index: 100;
 }
 
 
 /* =========================
- LOGO
+   LOGO
 ========================= */
 
 .logo {
@@ -64,7 +75,7 @@ body {
 
 
 /* =========================
- SEARCH
+   SEARCH
 ========================= */
 
 .search {
@@ -98,7 +109,7 @@ body {
 
 
 /* =========================
- HEADER RIGHT
+   HEADER RIGHT
 ========================= */
 
 .header-right {
@@ -112,7 +123,7 @@ body {
 
 
 /* =========================
- USER
+   USER
 ========================= */
 
 .user {
@@ -138,7 +149,7 @@ body {
 
 
 /* =========================
- AVATAR
+   AVATAR
 ========================= */
 
 .avatar {
@@ -167,23 +178,15 @@ body {
 }
 
 .avatar.small {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
 
   font-size: 16px;
 }
 
-.avatar-blue {
-  background: #10a981;
-}
-
-.avatar-purple {
-  background: #9147b9;
-}
-
 
 /* =========================
- NOTIFICATION CONTAINER
+   NOTIFICATION CONTAINER
 ========================= */
 
 .notification-container {
@@ -192,7 +195,7 @@ body {
 
 
 /* =========================
- NOTIFICATION BUTTON
+   NOTIFICATION BUTTON
 ========================= */
 
 .notification-wrapper {
@@ -227,7 +230,7 @@ body {
 
 
 /* =========================
- NOTIFICATION BADGE
+   NOTIFICATION BADGE
 ========================= */
 
 .notification-badge {
@@ -259,7 +262,7 @@ body {
 
 
 /* =========================
- NOTIFICATION DROPDOWN
+   NOTIFICATION DROPDOWN
 ========================= */
 
 .notification-dropdown {
@@ -276,7 +279,7 @@ body {
   border-radius: 12px;
 
   box-shadow:
-      0 8px 30px rgba(0, 0, 0, 0.16);
+    0 8px 30px rgba(0, 0, 0, 0.16);
 
   border: 1px solid #e5e7eb;
 
@@ -287,11 +290,11 @@ body {
 
 
 /* =========================
- NOTIFICATION HEADER
+   NOTIFICATION HEADER
 ========================= */
 
 .notification-header {
-  height: 65px;
+  min-height: 65px;
 
   display: flex;
   align-items: center;
@@ -305,8 +308,7 @@ body {
 .notification-header h3 {
   margin: 0;
 
-  font-size: 20px;
-
+  font-size: 18px;
   color: #111827;
 }
 
@@ -318,10 +320,9 @@ body {
   color: #1877f2;
 
   font-size: 13px;
+  font-weight: 600;
 
   cursor: pointer;
-
-  font-weight: 600;
 }
 
 .notification-header button:hover {
@@ -330,7 +331,7 @@ body {
 
 
 /* =========================
- NOTIFICATION LIST
+   NOTIFICATION LIST
 ========================= */
 
 .notification-list {
@@ -341,7 +342,7 @@ body {
 
 
 /* =========================
- NOTIFICATION ITEM
+   NOTIFICATION ITEM
 ========================= */
 
 .notification-item {
@@ -352,54 +353,37 @@ body {
 
   gap: 12px;
 
-  padding: 13px 18px;
+  padding: 14px 18px;
 
   cursor: pointer;
 
-  transition: 0.15s;
+  transition: 0.2s;
 }
 
 .notification-item:hover {
   background: #f5f6f7;
 }
 
-
-/* THÔNG BÁO CHƯA ĐỌC */
-
 .notification-item.unread {
-  background: #edf5ff;
+  background: #eef5ff;
 }
-
-.notification-item.unread:hover {
-  background: #e3efff;
-}
-
-
-/* =========================
- NOTIFICATION ICON
-========================= */
 
 .notification-item-icon {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
 
   border-radius: 50%;
 
-  background: #e8f0fe;
+  background: #f1f3f5;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  font-size: 21px;
+  font-size: 20px;
 
   flex-shrink: 0;
 }
-
-
-/* =========================
- NOTIFICATION CONTENT
-========================= */
 
 .notification-item-content {
   flex: 1;
@@ -408,7 +392,7 @@ body {
 }
 
 .notification-item-content p {
-  margin: 0 20px 4px 0;
+  margin: 0;
 
   font-size: 14px;
 
@@ -424,6 +408,10 @@ body {
 }
 
 .notification-item-content span {
+  display: block;
+
+  margin-top: 4px;
+
   color: #65676b;
 
   font-size: 12px;
@@ -431,7 +419,7 @@ body {
 
 
 /* =========================
- UNREAD DOT
+   UNREAD DOT
 ========================= */
 
 .notification-unread-dot {
@@ -450,7 +438,7 @@ body {
 
 
 /* =========================
- EMPTY
+   EMPTY
 ========================= */
 
 .notification-empty {
@@ -502,7 +490,7 @@ body {
 
 
 /* =========================
- NOTIFICATION FOOTER
+   NOTIFICATION FOOTER
 ========================= */
 
 .notification-footer {
@@ -536,31 +524,40 @@ body {
 }
 
 
-/* =========================
- MAIN LAYOUT
-========================= */
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
 
 .main-layout {
+  width: 100%;
+
   display: grid;
 
+  /*
+     TRÁI             GIỮA             PHẢI
+     220px            820px            300px
+  */
+
   grid-template-columns:
-      220px
-      minmax(500px, 1fr)
-      300px;
+    220px
+    820px
+    300px;
 
   gap: 22px;
 
-  max-width: 1280px;
+  padding: 28px 30px;
 
   margin: 0 auto;
 
-  padding: 28px 20px;
+  justify-content: center;
+
+  align-items: start;
 }
 
 
-/* =========================
- SIDEBAR
-========================= */
+/* =========================================================
+   SIDEBAR TRÁI
+========================================================= */
 
 .sidebar {
   position: sticky;
@@ -570,6 +567,7 @@ body {
   height: calc(100vh - 120px);
 
   display: flex;
+
   flex-direction: column;
 
   justify-content: space-between;
@@ -577,6 +575,7 @@ body {
 
 .sidebar nav {
   display: flex;
+
   flex-direction: column;
 
   gap: 5px;
@@ -584,7 +583,7 @@ body {
 
 
 /* =========================
- MENU
+   MENU
 ========================= */
 
 .menu {
@@ -640,11 +639,12 @@ body {
 
 
 /* =========================
- SIDEBAR BOTTOM
+   SIDEBAR BOTTOM
 ========================= */
 
 .sidebar-bottom {
   display: flex;
+
   flex-direction: column;
 
   gap: 6px;
@@ -655,20 +655,30 @@ body {
 }
 
 
-/* =========================
- CONTENT
-========================= */
+/* =========================================================
+   CONTENT
+========================================================= */
 
 .content {
-  width: 100%;
+  width: 820px;
+
+  max-width: 820px;
+
+  min-width: 0;
+
+  margin: 0;
+
+  padding: 0;
 }
 
 
-/* =========================
- CREATE POST
-========================= */
+/* =========================================================
+   CREATE POST
+========================================================= */
 
 .create-post {
+  width: 820px;
+
   background: white;
 
   border: 1px solid #e1e5ea;
@@ -682,6 +692,7 @@ body {
 
 .post-user {
   display: flex;
+
   align-items: center;
 
   gap: 12px;
@@ -710,12 +721,13 @@ body {
 }
 
 
-/* =========================
- POST ACTIONS
-========================= */
+/* =========================================================
+   POST ACTIONS
+========================================================= */
 
 .post-actions {
   display: flex;
+
   align-items: center;
 
   gap: 10px;
@@ -724,37 +736,37 @@ body {
 
   margin-top: 15px;
 
-  padding-top: 12px;
+  padding-top: 15px;
 }
 
 .post-actions button {
+  flex: 1;
+
+  height: 42px;
+
   border: none;
 
   background: transparent;
 
-  padding: 9px 12px;
-
-  border-radius: 7px;
-
-  cursor: pointer;
-
-  color: #555;
+  border-radius: 8px;
 
   font-size: 14px;
+
+  color: #4b5563;
+
+  cursor: pointer;
 }
 
 .post-actions button:hover {
-  background: #f1f3f6;
+  background: #f1f3f5;
 }
 
 .post-actions .post-btn {
-  margin-left: auto;
+  flex: 0 0 125px;
 
   background: #1877f2;
 
   color: white;
-
-  padding: 10px 24px;
 
   font-weight: 600;
 }
@@ -763,25 +775,37 @@ body {
   background: #166fe5;
 }
 
-
-/* =========================
- POST MESSAGE
-========================= */
-
 .post-message {
   margin: 12px 0 0;
 
+  font-size: 14px;
+
   color: #1877f2;
 
-  font-size: 14px;
+  text-align: center;
 }
 
 
-/* =========================
- POST
-========================= */
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading-text {
+  text-align: center;
+
+  color: #65676b;
+
+  padding: 30px;
+}
+
+
+/* =========================================================
+   POST
+========================================================= */
 
 .post {
+  width: 820px;
+
   background: white;
 
   border: 1px solid #e1e5ea;
@@ -794,104 +818,118 @@ body {
 }
 
 
-/* =========================
- POST HEADER
-========================= */
+/* =========================================================
+   POST HEADER
+========================================================= */
 
 .post-header {
   display: flex;
 
+  align-items: center;
+
   gap: 12px;
 
-  padding: 20px 20px 10px;
+  padding: 18px 20px;
 }
 
 .post-header h3 {
-  margin: 2px 0 5px;
+  margin: 0 0 4px;
 
   font-size: 16px;
+
+  color: #111827;
 }
 
 .post-header span {
   color: #65676b;
 
-  font-size: 12px;
+  font-size: 13px;
 }
 
 
-/* =========================
- POST CONTENT
-========================= */
+/* =========================================================
+   POST CONTENT
+========================================================= */
 
 .post-content {
-  padding: 15px 22px 20px;
+  padding: 10px 28px 24px;
+
+  min-height: 90px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
 }
 
 .post-content p {
   margin: 0;
 
-  font-size: 16px;
+  font-size: 18px;
 
   line-height: 1.6;
 
+  color: #111827;
+
   text-align: center;
 
-  color: #222;
+  word-break: break-word;
 }
 
 
-/* =========================
- POST STATS
-========================= */
+/* =========================================================
+   POST STATS
+========================================================= */
 
 .post-stats {
   display: flex;
 
+  align-items: center;
+
   justify-content: space-between;
 
-  padding: 10px 20px;
+  padding: 12px 20px;
+
+  border-top: 1px solid #eeeeee;
 
   color: #65676b;
 
   font-size: 13px;
-
-  border-bottom: 1px solid #eeeeee;
 }
 
 
-/* =========================
- POST FOOTER
-========================= */
+/* =========================================================
+   POST FOOTER
+========================================================= */
 
 .post-footer {
   display: grid;
 
   grid-template-columns:
-      1fr
-      1fr
-      1fr;
+    repeat(3, 1fr);
 
-  padding: 5px 10px;
+  border-top: 1px solid #eeeeee;
 }
 
 .post-footer button {
-  height: 42px;
+  height: 50px;
 
   border: none;
 
   background: transparent;
 
-  border-radius: 7px;
+  color: #4b5563;
 
-  color: #555;
-
-  font-size: 14px;
+  font-size: 15px;
 
   cursor: pointer;
+
+  transition: 0.2s;
 }
 
 .post-footer button:hover {
-  background: #f1f3f6;
+  background: #f1f3f5;
 }
 
 .post-footer button.liked {
@@ -901,29 +939,26 @@ body {
 }
 
 
-/* =========================
- COMMENTS
-========================= */
+/* =========================================================
+   COMMENTS
+========================================================= */
 
 .comments-section {
   border-top: 1px solid #eeeeee;
 
-  background: #fafafa;
+  padding: 15px 20px 20px;
 
-  padding: 15px 20px;
+  background: #fafbfc;
 }
-
-
-/* =========================
- COMMENT INPUT
-========================= */
 
 .comment-input {
   display: flex;
 
   align-items: center;
 
-  gap: 8px;
+  gap: 10px;
+
+  margin-bottom: 15px;
 }
 
 .comment-input input {
@@ -931,41 +966,51 @@ body {
 
   height: 40px;
 
-  border: none;
-
-  outline: none;
-
-  background: #edf0f3;
+  border: 1px solid #dfe3e8;
 
   border-radius: 20px;
 
+  outline: none;
+
   padding: 0 15px;
+
+  background: white;
 
   font-size: 14px;
 }
 
+.comment-input input:focus {
+  border-color: #1877f2;
+}
+
 .comment-input button {
+  height: 40px;
+
+  padding: 0 16px;
+
   border: none;
+
+  border-radius: 20px;
 
   background: #1877f2;
 
   color: white;
 
-  border-radius: 18px;
-
-  padding: 8px 15px;
+  font-weight: 600;
 
   cursor: pointer;
 }
 
+.comment-input button:hover {
+  background: #166fe5;
+}
 
-/* =========================
- COMMENTS LIST
-========================= */
+
+/* =========================================================
+   COMMENT LIST
+========================================================= */
 
 .comments-list {
-  margin-top: 15px;
-
   display: flex;
 
   flex-direction: column;
@@ -976,17 +1021,17 @@ body {
 .comment {
   display: flex;
 
-  gap: 9px;
+  gap: 10px;
 }
 
 .comment-body {
-  background: #edf0f3;
+  flex: 1;
+
+  background: #f1f3f5;
 
   border-radius: 12px;
 
-  padding: 8px 12px;
-
-  flex: 1;
+  padding: 9px 12px;
 }
 
 .comment-user {
@@ -995,268 +1040,586 @@ body {
   align-items: center;
 
   gap: 8px;
+
+  margin-bottom: 4px;
 }
 
 .comment-user strong {
   font-size: 13px;
+
+  color: #111827;
 }
 
 .comment-user span {
-  color: #777;
-
   font-size: 11px;
+
+  color: #65676b;
 }
 
 .comment-body p {
-  margin: 5px 0 0;
-
-  font-size: 13px;
-
-  line-height: 1.4;
-}
-
-.comment-loading,
-.no-comments {
-  text-align: center;
-
-  color: #777;
-
-  font-size: 13px;
-}
-
-
-/* =========================
- RIGHT SIDEBAR
-========================= */
-
-.right-sidebar {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 20px;
-}
-
-.right-box {
-  background: white;
-
-  border: 1px solid #e1e5ea;
-
-  border-radius: 12px;
-
-  padding: 20px;
-}
-
-.right-box h3 {
-  margin: 0 0 18px;
-
-  font-size: 16px;
-}
-
-
-/* =========================
- FRIEND
-========================= */
-
-.friend {
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  margin-bottom: 16px;
-}
-
-.friend strong {
-  display: block;
-
-  font-size: 14px;
-
-  margin-bottom: 5px;
-}
-
-.friend .online {
-  display: block;
-
-  color: #18a957;
-
-  font-size: 12px;
-}
-
-.view-all {
-  width: 100%;
-
-  height: 38px;
-
-  border: none;
-
-  background: #edf4ff;
-
-  color: #1877f2;
-
-  border-radius: 8px;
-
-  font-weight: 600;
-
-  cursor: pointer;
-}
-
-.view-all:hover {
-  background: #dfeaff;
-}
-
-
-/* =========================
- RIGHT NOTIFICATION
-========================= */
-
-.notification {
-  display: flex;
-
-  gap: 10px;
-
-  align-items: flex-start;
-
-  padding: 10px 0;
-
-  border-bottom: 1px solid #eeeeee;
-}
-
-.notification:last-child {
-  border-bottom: none;
-}
-
-.notification span {
-  font-size: 18px;
-}
-
-.notification p {
   margin: 0;
 
   font-size: 13px;
 
   line-height: 1.5;
 
-  color: #555;
+  color: #1f2937;
+
+  word-break: break-word;
+}
+
+.comment-loading,
+.no-comments {
+  margin: 10px 0;
+
+  text-align: center;
+
+  color: #65676b;
+
+  font-size: 13px;
 }
 
 
-/* =========================
- SCROLLBAR
-========================= */
+/* =========================================================
+   RIGHT SIDEBAR - BẠN BÈ FACEBOOK STYLE
+========================================================= */
 
-.notification-list::-webkit-scrollbar {
-  width: 6px;
+.right-sidebar {
+  width: 300px;
+
+  height: calc(100vh - 100px);
+
+  position: sticky;
+
+  top: 100px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  background: transparent;
+
+  overflow: hidden;
 }
 
-.notification-list::-webkit-scrollbar-thumb {
-  background: #c7cbd1;
+
+/* =========================================================
+   BOX BẠN BÈ
+========================================================= */
+
+.right-box {
+  width: 300px;
+
+  background: transparent;
+
+  border: none;
+
+  border-radius: 0;
+
+  padding: 0;
+
+  margin: 0;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+}
+
+
+/* scrollbar bên phải */
+
+.right-box::-webkit-scrollbar {
+  width: 7px;
+}
+
+.right-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.right-box::-webkit-scrollbar-thumb {
+  background: #c5c7ca;
 
   border-radius: 10px;
 }
 
+.right-box::-webkit-scrollbar-thumb:hover {
+  background: #aeb1b5;
+}
 
-/* =========================
- RESPONSIVE
-========================= */
+
+/* =========================================================
+   TIÊU ĐỀ BẠN BÈ
+========================================================= */
+
+.right-box h3 {
+  margin: 0;
+
+  padding: 8px 12px 15px;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  color: #1c1e21;
+}
+
+
+/* =========================================================
+   TỪNG BẠN
+========================================================= */
+
+.friend {
+  width: 100%;
+
+  min-height: 58px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  margin: 0;
+
+  padding: 7px 10px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  border: none;
+
+  transition:
+    background 0.15s ease;
+}
+
+.friend:hover {
+  background: #e4e6eb;
+}
+
+
+/* =========================================================
+   AVATAR BẠN
+========================================================= */
+
+.friend .avatar.small {
+  width: 44px;
+
+  height: 44px;
+
+  min-width: 44px;
+
+  border-radius: 50%;
+
+  background: #e4e6eb;
+
+  color: #65676b;
+
+  border: 1px solid #d8dadf;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  position: relative;
+}
+
+
+/* =========================================================
+   THÔNG TIN BẠN
+========================================================= */
+
+.friend > div:last-child {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 2px;
+}
+
+.friend strong {
+  display: block;
+
+  margin: 0;
+
+  font-size: 15px;
+
+  font-weight: 600;
+
+  color: #050505;
+
+  line-height: 20px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   ONLINE
+========================================================= */
+
+.friend .online {
+  display: block;
+
+  color: #31a24c;
+
+  font-size: 11px;
+
+  font-weight: 500;
+
+  line-height: 16px;
+}
+
+
+/* =========================================================
+   NÚT XEM TẤT CẢ
+========================================================= */
+
+.right-box .view-all {
+  width: calc(100% - 20px);
+
+  height: 40px;
+
+  margin: 8px 10px 15px;
+
+  border: none;
+
+  background: #e7f0ff;
+
+  color: #1877f2;
+
+  border-radius: 8px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.right-box .view-all:hover {
+  background: #d8e7ff;
+}
+
+
+/* =========================================================
+   KHI CHƯA CÓ BẠN
+========================================================= */
+
+.right-box .notification-empty {
+  min-height: 180px;
+
+  padding: 20px 10px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+.right-box .notification-empty-icon {
+  width: 55px;
+
+  height: 55px;
+
+  border-radius: 50%;
+
+  background: #f1f3f5;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 25px;
+
+  margin-bottom: 12px;
+}
+
+.right-box .notification-empty strong {
+  font-size: 14px;
+
+  color: #111827;
+}
+
+.right-box .notification-empty p {
+  margin: 6px 0 0;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+
+  color: #65676b;
+}
+
+
+/* =========================================================
+   KHÔNG CÓ THÔNG BÁO Ở CỘT PHẢI
+========================================================= */
+
+.right-sidebar .notification-box,
+.right-sidebar .notifications-box,
+.right-sidebar .right-notification {
+  display: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1450px) {
+
+  .main-layout {
+    grid-template-columns:
+      200px
+      minmax(0, 820px)
+      280px;
+
+    gap: 18px;
+
+    padding: 25px 20px;
+  }
+
+  .content {
+    width: 100%;
+
+    max-width: 820px;
+  }
+
+  .create-post,
+  .post {
+    width: 100%;
+  }
+
+  .right-sidebar {
+    width: 280px;
+  }
+
+  .right-box {
+    width: 280px;
+  }
+
+  .logo {
+    width: 190px;
+  }
+
+  .search {
+    width: 350px;
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
 
 @media (max-width: 1100px) {
 
   .main-layout {
-      grid-template-columns:
-          190px
-          minmax(450px, 1fr);
+    grid-template-columns:
+      190px
+      minmax(0, 1fr)
+      260px;
+
+    gap: 16px;
+
+    padding: 20px;
+  }
+
+  .content {
+    width: 100%;
+
+    max-width: none;
+  }
+
+  .create-post,
+  .post {
+    width: 100%;
   }
 
   .right-sidebar {
-      display: none;
+    width: 260px;
   }
 
-  .search {
-      width: 350px;
-  }
-
-}
-
-
-@media (max-width: 800px) {
-
-  .header {
-      padding: 0 15px;
+  .right-box {
+    width: 260px;
   }
 
   .logo {
-      width: auto;
-
-      font-size: 18px;
+    width: 180px;
   }
 
   .search {
-      display: none;
+    width: 320px;
   }
-
-  .main-layout {
-      grid-template-columns: 1fr;
-
-      padding: 15px;
-  }
-
-  .sidebar {
-      position: static;
-
-      height: auto;
-  }
-
-  .sidebar nav {
-      flex-direction: row;
-
-      overflow-x: auto;
-  }
-
-  .sidebar-bottom {
-      display: none;
-  }
-
-  .menu {
-      min-width: 120px;
-
-      justify-content: center;
-  }
-
-  .notification-dropdown {
-      position: fixed;
-
-      top: 65px;
-
-      right: 10px;
-
-      width: calc(100vw - 20px);
-
-      max-width: 390px;
-  }
-
 }
 
 
-@media (max-width: 500px) {
+/* =========================================================
+   MÀN HÌNH NHỎ
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .main-layout {
+    grid-template-columns:
+      180px
+      minmax(0, 1fr);
+  }
+
+  .right-sidebar {
+    display: none;
+  }
+
+  .search {
+    width: 260px;
+  }
+
+  .content {
+    width: 100%;
+  }
+
+  .create-post,
+  .post {
+    width: 100%;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .header {
+    padding: 0 15px;
+  }
+
+  .logo {
+    width: auto;
+
+    font-size: 18px;
+  }
+
+  .search {
+    flex: 1;
+
+    width: auto;
+
+    margin-left: 15px;
+  }
 
   .user span {
-      display: none;
+    display: none;
+  }
+
+  .main-layout {
+    display: block;
+
+    padding: 15px;
+  }
+
+  .sidebar {
+    position: static;
+
+    height: auto;
+
+    margin-bottom: 15px;
+  }
+
+  .sidebar nav {
+    flex-direction: row;
+
+    overflow-x: auto;
+  }
+
+  .menu {
+    min-width: 120px;
+  }
+
+  .sidebar-bottom {
+    display: none;
+  }
+
+  .content {
+    width: 100%;
+
+    max-width: none;
+  }
+
+  .create-post,
+  .post {
+    width: 100%;
   }
 
   .notification-dropdown {
-      right: 5px;
+    width: min(
+      390px,
+      calc(100vw - 30px)
+    );
 
-      width: calc(100vw - 10px);
+    right: -100px;
+  }
+}
+
+
+/* =========================================================
+   ĐIỆN THOẠI NHỎ
+========================================================= */
+
+@media (max-width: 500px) {
+
+  .header {
+    height: 64px;
+  }
+
+  .logo {
+    font-size: 16px;
+  }
+
+  .search {
+    height: 40px;
+  }
+
+  .search input {
+    font-size: 13px;
+  }
+
+  .post-content p {
+    font-size: 16px;
+  }
+
+  .post-actions .post-btn {
+    flex: 0 0 90px;
   }
 
   .post-footer button {
-      font-size: 12px;
+    font-size: 13px;
   }
 
-  .post-actions button {
-      font-size: 12px;
+  .notification-dropdown {
+    right: -120px;
   }
-
 }
